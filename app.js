@@ -9,19 +9,15 @@ app.use(cors());
 
 app.use(express.json());
 
-//logger middleware
 
 app.use(function(request, response, next) {
     console.log("In comes a request to: " + request.url);
     next();
 });
 
-//static file middleware
 var imagePath = path.resolve(__dirname, "image");
 app.use(express.static(imagePath));
 
-
-//connect to MongoDB
 
 const MongoClient = require('mongodb').MongoClient;
 let db;
@@ -35,19 +31,15 @@ app.get('/', (req, res, next) =>{
     res.send('Select a collection, e.g /collection/messages')
 })
 
-//get collection name
-//look up what app.param does
+
 app.param('collectionName', (req, res, next, collectionName) => {
 
     req.collection = db.collection(collectionName)
-
-    // console.log('collection name:', req.collection)
 
     return next()
 
 })
 
-//retrieve all the objects from a collection
 
 app.get('/collection/:collectionName', (req, res, next) => {
 
@@ -61,7 +53,7 @@ app.get('/collection/:collectionName', (req, res, next) => {
 
 })
 
-//adding post
+
 app.post('/collection/:collectionName', (req, res, next) => {
     req.collection.insert(req.body, (e, results) => {
         if(e) return next(e)
@@ -69,7 +61,7 @@ app.post('/collection/:collectionName', (req, res, next) => {
     })
 })
 
-//return with object id
+
 const ObjectID = require('mongodb').ObjectID;
 
  
@@ -82,7 +74,7 @@ app.get('/collection/:collectionName/:id', (req, res, next) => {
 })
 
 
-//update an object finding the object by id
+
 app.put('/collection/:collectionName/:id', (req, res, next) => {
     let les = req.body;
     req.collection.update(
@@ -95,7 +87,6 @@ app.put('/collection/:collectionName/:id', (req, res, next) => {
     })
  })
 
-//file not found middleware
 
 app.use(function(request, response, next) {
     response.writeHead(200, { "Content-Type": "text/plain" });
