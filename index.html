@@ -107,7 +107,7 @@
 		created: function() {
 				console.log('requesting')
 
-                //get all lessons and store in lessons array to be displayed
+                
 				fetch('https://lessons101.herokuapp.com/collection/Lessons').then(
 					function(res) {
 						res.json().then(
@@ -147,13 +147,12 @@
 		submitForm(){
             let order = { name: this.order.name, phone: this.order.phone, lessons: this.cart };
 			
-                 //on submit, post / create a new entry in orders collection
 				 fetch('https://lessons101.herokuapp.com/collection/Orders', {
                         method: 'POST',
                         headers: {
-                                'Content-Type': 'application/json', // set the data type as JSON
+                                'Content-Type': 'application/json', 
                         },
-                        body: JSON.stringify(order) //maybe change this to regular json object
+                        body: JSON.stringify(order) 
                         })
                         .then(response => response.json())
                         .then(result => {
@@ -168,9 +167,9 @@
                     fetch('https://lessons101.herokuapp.com/collection/'+val._id, {
                         method: 'PUT',
                         headers: {
-                                'Content-Type': 'application/json', // set the data type as JSON
+                                'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify(val) //maybe change this to regular json object
+                        body: JSON.stringify(val) 
                         })
                         .then(response => response.json())
                         .then(result => { 
