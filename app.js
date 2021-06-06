@@ -84,10 +84,10 @@ app.get('/collection/:collectionName/:id', (req, res, next) => {
 
 //update an object finding the object by id
 app.put('/collection/:collectionName/:id', (req, res, next) => {
-    let lesson = req.body;
+    let les = req.body;
     req.collection.update(
     {_id: new ObjectID(req.params.id)},
-    {$set: { numberOfSpaces: lesson.numberOfSpaces }},
+    {$set: { numberofspace: les.numberofspace }},
     {safe: true, multi: false},
     (e, result) => {
     if (e) return next(e)
