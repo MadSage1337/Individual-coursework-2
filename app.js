@@ -16,8 +16,8 @@ app.use(function(request, response, next) {
 });
 
 //static file middleware
-var staticPath = path.resolve(__dirname, "static");
-app.use(express.static(staticPath));
+var imagePath = path.resolve(__dirname, "image");
+app.use(express.static(imagePath));
 
 
 //connect to MongoDB
