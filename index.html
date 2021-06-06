@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>After School Lessons</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+
+</head>
+<body>
+
+<div id="app">
+	<header>
+		<h1 v-text="sitename"></h1>
+		<button v-on:click='showShoppingCart' v-if='cartItemCount > 0'>
+			{{cartItemCount}}
+			<span class="fas fa-shopping-cart"></span>Shopping Cart
+		</button>
+		<button disabled='disabled' v-else >Shopping Cart</button>
+	</header>
+	<main>
+		<h1>Sort by</h1>
+		<div class="form-check">
+			<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1">
+			<label class="form-check-label" for="flexRadioDefault1">
+			  Subjects
+			</label>
+		  </div>
+		  <div class="form-check">
+			<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+			<label class="form-check-label" for="flexRadioDefault2">
+			  Location
+			</label>
+		  </div>
+
+		  <div class="form-check">
+			<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+			<label class="form-check-label" for="flexRadioDefault2">
+			  price
+			</label>
+		  </div>
+
+		  <div class="form-check">
+			<input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked>
+			<label class="form-check-label" for="flexRadioDefault2">
+			  Availability
+			</label>
+		  </div>
+		  
+		<div v-if='showProduct' style="display: flex; flex-wrap: wrap">
+			<div v-for="lesson in lessons">
+				<div style="margin-left: 20px;">
+					<img v-bind:src="lesson.image" alt="" height="200" width="200">
+					<h2>subject: {{lesson.subject}}</h2>
+					<p>location: {{lesson.location}}</p>
+					<p>price: {{lesson.price}}</p>
+					<p>Number Of Spaces: {{lesson.numberofspace}}</p>
+					<p>
+					<button v-on:click='addToCart(lesson)' v-if='canAddToCart(lesson)'>Add to cart</button>
+					<button disabled='disabled' v-else >Add to cart</button>
+					</p>
+				</div>
+			</div></div>
+		<div v-else>
+           <div style="display: flex; flex-wrap: wrap">
+			<div v-for="lesson in cart">
+				<div style="margin-left: 20px;" >
+					<img v-bind:src="lesson.image" alt="" height="200" width="200">
+					<h2>subject: {{lesson.subject}}</h2>
+					<p>location: {{lesson.location}}</p>
+					<p>price: {{lesson.price}}</p>
+					<p>Number Of Spaces: {{lesson.numberofspace}}</p>
+					<button v-on:click='remove(lesson)'>Remove</button>
+				</div>
+			</div>
+		</div>
+
+            <h4><strong>Enter Your Information</strong></h4>
+			<div>
+				<p>
+					<input type="str" placeholder="Enter Name"/>
+				</p>
+				<p>	
+					<input type="number" placeholder="Enter Phone Number"/>
+				</p>
+               <button v-on:click="submitForm">Checkout</button>
+			</div>
+		</div>
+	</main>
+</div>
+
+<script src="./Lessons.js"></script>
+<script src="https://unpkg.com/vue"></script>
+<script>
+	var school = new Vue({
+		el: '#app',
+		data: {
+			sitename: "After School Lessons",
+			lessons :[],
+       		cart: [],
+			showProduct : true
+		},
+
+		created: function() {
+				console.log('requesting')
+
+                //get all lessons and store in lessons array to be displayed
+				fetch('').then(
+					function(res) {
+						res.json().then(
+							function(json) {
+								school.lessons = json;
+								console.log(json);
+							});
+					});
+			},
+
+		methods:{
+		  addToCart: function (lesson)
+		  {
+			  this.cart.push(lesson);
+			 if(lesson.numberofspace){
+				 lesson.numberofspace -= 1;
+			 }
+
+		  },
+
+		  remove(lesson){
+			let index = this.cart.indexOf(lesson);
+			if(index > -1){
+                        this.cart.splice(index, 1);
+                    }
+                    lesson.numberofspace+= 1;
+		  },
+		  canAddToCart(lesson){
+			  return lesson.numberofspace > 0;
+		  },
+
+		  showShoppingCart()
+        {
+            this.showProduct = this.showProduct ? false : true;
+        },
+
+		submitForm(){
+            alert('order has been submitted')
+        },
+
+	
+	  },
+	  computed:{
+		
+		  cartItemCount: function()
+        {
+            return this.cart.length || '';
+        },
+
+	
+	  },
+
+		})
+
+</script>
+
+</body>
+</html>
