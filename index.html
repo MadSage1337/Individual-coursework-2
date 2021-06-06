@@ -77,10 +77,10 @@
             <h4><strong>Enter Your Information</strong></h4>
 			<div>
 				<p>
-					<input type="str" placeholder="Enter Name"/>
+					<input required v-model.trim="order.name"/>
 				</p>
 				<p>	
-					<input type="number" placeholder="Enter Phone Number"/>
+					 <input v-model="order.phone" type="tel" required/>
 				</p>
                <button v-on:click="submitForm">Checkout</button>
 			</div>
@@ -97,7 +97,11 @@
 			sitename: "After School Lessons",
 			lessons :[],
        		cart: [],
-			showProduct : true
+			showProduct : true,
+			order:{
+                    name: '',
+                    phone: '',
+                },
 		},
 
 		created: function() {
@@ -141,8 +145,44 @@
         },
 
 		submitForm(){
-            alert('order has been submitted')
+            let order = { name: this.order.name, phone: this.order.phone, lessons: this.cart };
+			
+                 //on submit, post / create a new entry in orders collection
+				 fetch('https://lessons101.herokuapp.com/collection/Orders', {
+                        method: 'POST',
+                        headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify(order) //maybe change this to regular json object
+                        })
+                        .then(response => response.json())
+                        .then(result => {
+                        alert("order submitted");
+                        console.log('Success:', result);
+                        })
+                        .catch(error => {
+                        console.error('Error:', error);
+                        });
+
+						this.cart.forEach(val => {
+                    fetch('https://lessons101.herokuapp.com/collection/'+val._id, {
+                        method: 'PUT',
+                        headers: {
+                                'Content-Type': 'application/json', // set the data type as JSON
+                        },
+                        body: JSON.stringify(val) //maybe change this to regular json object
+                        })
+                        .then(response => response.json())
+                        .then(result => { 
+                        console.log('Success:', result);
+                        })
+                        .catch(error => {
+                        console.error('Error:', error);
+                        });
+                  })      
         },
+
+
 
 	
 	  },
